@@ -25,8 +25,8 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
         String jwt = request.getHeader(JwtConstant.JWT_HEADER);
 
-        if (jwt != null && jwt.startsWith("Bearer ")) {
-            jwt = jwt.substring(7); // Remove "Bearer " prefix
+        if (jwt != null && jwt.startsWith("Bearer")) {
+            jwt = jwt.substring(7);
             try {
                 SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
@@ -41,7 +41,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
-                // Log detailed error message
+
                 logger.error("Token validation failed: ", e);
                 throw new BadCredentialsException("Invalid token");
             }

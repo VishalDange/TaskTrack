@@ -3,6 +3,7 @@ package com.microservices.config;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,28 +26,29 @@ public class AppConfig {
         http.sessionManagement(management -> management.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN")
                         .requestMatchers("/api/**").authenticated()
-                        .requestMatchers("/auth/**").permitAll() // Ensure authentication endpoints are accessible
                         .anyRequest().permitAll())
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())).httpBasic(Customizer.withDefaults()).formLogin(Customizer.withDefaults());
 
         return http.build();
     }
 
     private CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(Arrays.asList(
-                "https://FoodSphere.app", "http://localhost:3000"
-        ));
-        cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cfg.setAllowCredentials(true);
-        cfg.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        cfg.setMaxAge(3600L);
-
-        return request -> cfg;
+        return new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration cfg=new CorsConfiguration();
+                cfg.setAllowedOrigins(Collections.singletonList("*"));
+                cfg.setAllowedMethods(Collections.singletonList("*"));
+                cfg.setAllowCredentials(true);
+                cfg.setAllowedHeaders(Collections.singletonList("*"));
+                cfg.setExposedHeaders(Arrays.asList("Authorization"));
+                cfg.setMaxAge(3600L);
+                return cfg;
+            }
+        };
     }
 
     @Bean
