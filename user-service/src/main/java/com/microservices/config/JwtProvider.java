@@ -26,7 +26,7 @@ public class JwtProvider extends OncePerRequestFilter {
 
     }
 
-    public String generateToken(Authentication auth){
+    public static String generateToken(Authentication auth){
 
         Collection<? extends GrantedAuthority> authorities=auth.getAuthorities();
         String roles=populateAuthorities(authorities);
