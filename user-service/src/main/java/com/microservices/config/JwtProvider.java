@@ -3,40 +3,33 @@ package com.microservices.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Service;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
-import java.io.IOException;
+
 import java.util.*;
 
-@Service
-public class JwtProvider extends OncePerRequestFilter {
+public class JwtProvider {
 
-    private static SecretKey key= Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
+    private static SecretKey key=Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public static String generateToken(Authentication auth) {
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        String roles = populateAuthorities(authorities);
 
-    }
-
-    public static String generateToken(Authentication auth){
-
-        Collection<? extends GrantedAuthority> authorities=auth.getAuthorities();
-        String roles=populateAuthorities(authorities);
-
-        String jwt= Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(new Date().getTime()+86400000)).claim("email",auth.getName()).claim("authorities",roles).signWith(key).compact();
-
+        String jwt=Jwts.builder()
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime()+86400000))
+                .claim("email",auth.getName())
+                .claim("authorities", roles)
+                .signWith(key)
+                .compact();
         return jwt;
+
     }
 
-    public static String getEmailFromJwtToken(String jwt){
+    public static String getEmailFromJwtToken(String jwt) {
         jwt=jwt.substring(7);
 
         Claims claims=Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
@@ -45,12 +38,13 @@ public class JwtProvider extends OncePerRequestFilter {
         return email;
     }
 
-    public static String populateAuthorities(Collection<? extends GrantedAuthority> collection){
-
+    public static String populateAuthorities(Collection<? extends GrantedAuthority> collection) {
         Set<String> auths=new HashSet<>();
-        for(GrantedAuthority authority:collection){
+
+        for(GrantedAuthority authority:collection) {
             auths.add(authority.getAuthority());
         }
         return String.join(",",auths);
     }
+
 }
