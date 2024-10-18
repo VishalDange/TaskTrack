@@ -1,9 +1,18 @@
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Modal,
+  Typography,
+} from "@mui/material";
 import React, { useEffect } from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { Avatar, Divider, ListItemText } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserList } from "../../../ReduxToolkit/AuthSlice";
+import { assignedTaskToUser } from "../../../ReduxToolkit/TaskSlice";
 
 const style = {
   position: "absolute",
@@ -12,24 +21,27 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  border: "none",
   boxShadow: 24,
+  outline: "none",
   p: 4,
+  boxShadow: "rgba(215, 106, 255, 0.507) 0px 0px 100px",
 };
 
 const users = [1, 1, 1, 1, 1];
 
 export const UserListModel = ({ open, handleClose, taskId }) => {
-  // const dispatch=useDispatch();
-  // const { auth } = useSelector((store) => store);
+  const dispatch = useDispatch();
+  const { auth } = useSelector((store) => store);
 
   useEffect(() => {
-    // dispatch(getUserList(localStorage.getItem("jwt")));
+    dispatch(getUserList(localStorage.getItem("jwt")));
   }, []);
 
   const handleAssignTask = (userId) => {
-    // dispatch(assignedTaskToUser({ userId, taskId }));
+    dispatch(assignedTaskToUser({ userId, taskId }));
   };
+
   return (
     <div>
       <Modal
