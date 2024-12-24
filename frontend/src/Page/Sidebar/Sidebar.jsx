@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./SideBar.css";
+import "./Sidebar.css";
+
 import { Avatar, Box, Button, Modal } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import CreateTaskForm from "../Task/CreateTask/CreateTaskForm";

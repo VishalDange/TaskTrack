@@ -1,6 +1,6 @@
 import React from "react";
 import TaskList from "../Task/TaskList/TaskList";
-import SideBar from "./SideBar";
+import SideBar from "../Sidebar/Sidebar";
 
 const Home = () => {
   return (
