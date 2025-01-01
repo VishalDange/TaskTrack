@@ -1,79 +1,77 @@
-// authSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { BASE_URL, api, setAuthHeader } from '../Api/api';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { BASE_URL, api, setAuthHeader } from "../Api/api";
 
-export const login = createAsyncThunk('auth/login', async (userData) => {
+export const login = createAsyncThunk("auth/login", async (userData) => {
   try {
     const response = await axios.post(`${BASE_URL}/auth/signin`, userData);
-    localStorage.setItem("jwt",response.data.jwt)
-    console.log("login success ",response.data)
+    localStorage.setItem("jwt", response.data.jwt);
+    console.log("login success ", response.data);
     return response.data;
   } catch (error) {
-    console.log("catch error  ",error)
+    console.log("catch error  ", error);
     throw Error(error.response.data.error);
   }
 });
 
-export const register = createAsyncThunk('auth/register', async (userData) => {
+export const register = createAsyncThunk("auth/register", async (userData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/auth/signup`, userData); 
-    localStorage.setItem("jwt",response.data.jwt)
-    console.log("register success ",response.data)
+    const response = await axios.post(`${BASE_URL}/auth/signup`, userData);
+    localStorage.setItem("jwt", response.data.jwt);
+    console.log("register success ", response.data);
     return response.data;
   } catch (error) {
-    console.log("catch error  ",error)
+    console.log("catch error  ", error);
     throw Error(error.response.data.error);
   }
 });
 
-
-
-export const logout = createAsyncThunk('auth/logout', async () => {
+export const logout = createAsyncThunk("auth/logout", async () => {
   try {
-    localStorage.clear()
+    localStorage.clear();
   } catch (error) {
     throw Error(error.response.data.error);
   }
 });
 
-export const getUserProfile = createAsyncThunk('auth/getUserProfile', async (jwt) => {
-  setAuthHeader(jwt,api)
-  try {
-      
-    const response = await api.get('/api/users/profile'); 
-    
-    console.log("get profile success ",response.data)
-    return response.data;
-  } catch (error) {
-    console.log("catch error  ",error)
-    throw Error(error.response.data.error);
-  }
-});
+export const getUserProfile = createAsyncThunk(
+  "auth/getUserProfile",
+  async (jwt) => {
+    setAuthHeader(jwt, api);
+    try {
+      const response = await api.get("/api/users/profile");
 
-export const getUserList = createAsyncThunk('auth/getUserList', async (jwt) => {
-  setAuthHeader(jwt,api)
+      console.log("get profile success ", response.data);
+      return response.data;
+    } catch (error) {
+      console.log("catch error  ", error);
+      throw Error(error.response.data.error);
+    }
+  }
+);
+
+export const getUserList = createAsyncThunk("auth/getUserList", async (jwt) => {
+  setAuthHeader(jwt, api);
   try {
-      
-    const response = await api.get('/api/users'); 
-    
-    console.log("user list ",response.data)
+    const response = await api.get("/api/users");
+
+    console.log("user list ", response.data);
     return response.data;
   } catch (error) {
-    console.log("catch error  ",error)
+    console.log("catch error  ", error);
     throw Error(error.response.data.error);
   }
 });
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState: {
     user: null,
     loggedIn: false,
     loading: false,
     error: null,
-    jwt:null,
-    users:[]
+    jwt: null,
+    users: [],
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -103,7 +101,6 @@ const authSlice = createSlice({
       .addCase(getUserList.fulfilled, (state, action) => {
         state.loading = false;
         state.users = action.payload;
-        
       })
       .addCase(getUserProfile.rejected, (state, action) => {
         state.loading = false;

@@ -16,7 +16,6 @@ import { deleteTask } from "../../../ReduxToolkit/TaskSlice";
 import UpdateTaskForm from "../UpdateTask/UpdateTask";
 import { useLocation, useNavigate } from "react-router-dom";
 import SubmissionListModal from "./SubmissionListModel";
-// import SubmissionListModal from "./SubmissionListModal";
 
 const techStack = ["Angular", "React", "Java"];
 

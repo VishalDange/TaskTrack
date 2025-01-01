@@ -1,4 +1,3 @@
-// taskSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { api, setAuthHeader } from "../Api/api";
@@ -21,11 +20,12 @@ export const fetchTasks = createAsyncThunk(
 
 export const fetchUsersTasks = createAsyncThunk(
   "task/fetchUsersTasks",
-  async ({ status, sortByCreatedAt, sortByDeadline,jwt }) => {
+  async ({ status, sortByCreatedAt, sortByDeadline, jwt }) => {
     setAuthHeader(localStorage.getItem("jwt"), api);
     try {
-      const response = await api.get("/api/tasks/user",
-      {params: { status, sortByDeadline, sortByCreatedAt }});
+      const response = await api.get("/api/tasks/user", {
+        params: { status, sortByDeadline, sortByCreatedAt },
+      });
       console.log("fetch users tasks ", response.data);
       return response.data;
     } catch (error) {

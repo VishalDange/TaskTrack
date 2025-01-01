@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import { Formik, Form, Field } from "formik";
+
 import {
   TextField,
   Button,
@@ -9,7 +9,6 @@ import {
   FormControlLabel,
   Autocomplete,
 } from "@mui/material";
-// import { DatePicker } from "@mui/lab";
 import * as Yup from "yup";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -169,7 +168,6 @@ const CreateTaskForm = ({ open, handleClose }) => {
                 <DateTimePicker
                   className="w-full"
                   label="Deadline"
-                  //   value={formData.deadline}
                   onChange={handleDeadlineChange}
                   renderInput={(params) => <TextField {...params} />}
                 />
